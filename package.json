@@ -1,0 +1,34 @@
+{
+  "name": "poke",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "babel-node ./bin/www",
+    "debug": "babel-node %NODE_DEBUG_OPTION% ./bin/www"
+  },
+  "dependencies": {
+    "bignum": "^0.12.5",
+    "body-parser": "~1.15.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.2.0",
+    "ejs": "~2.4.1",
+    "events": "^1.1.1",
+    "express": "~4.13.4",
+    "geocoder": "^0.2.2",
+    "geolib": "^2.0.21",
+    "gpsoauthnode": "^0.0.5",
+    "istanbul": "^0.4.4",
+    "mongodb": "^2.2.4",
+    "morgan": "~1.7.0",
+    "node-sass-middleware": "0.8.0",
+    "protobufjs": "^5.0.1",
+    "request": "^2.73.0",
+    "serve-favicon": "~2.3.0",
+    "simple-s2-node": "^0.0.2",
+    "tape": "^4.6.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.11.4",
+    "babel-preset-es2015": "^6.9.0"
+  }
+}
