@@ -138,7 +138,7 @@ const service = {
         var pokemons = [];
         var promise = (resolve, reject) => {
             api.Heartbeat((err, res) => {
-                if (err) {
+                if (err || !res) {
                     console.error(err);
                     reject(err);
                 }
