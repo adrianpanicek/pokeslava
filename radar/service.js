@@ -100,7 +100,7 @@ const service = {
 
         if(config.debug)
             console.log('Scanning point ' + (this.actualPoint+1) + ' of ' + this.points.length + '(' + this.points[this.actualPoint].latitude + ', ' + this.points[this.actualPoint].longitude + ')')
-        
+
         api.SetLocation({
             type: 'coords',
             coords: {
@@ -142,7 +142,7 @@ const service = {
         var pokemons = [];
         var promise = (resolve, reject) => {
             api.Heartbeat((err, res) => {
-                if (err || !res) {
+                if (err || !res || !res.cells) {
                     console.error(err);
                     reject(err);
                 }
