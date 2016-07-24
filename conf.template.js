@@ -1,6 +1,7 @@
 
 const config = {
     port: 80,
+    debug: false,
     radar: {
         login: 'KalinakOdstup',
         password: '******',

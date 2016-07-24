@@ -98,7 +98,9 @@ const service = {
         if(!this.points[this.actualPoint].longitude)
             throw new Error('Point ' + this.actualPoint + ' not valid');
 
-        console.log('Scanning point ' + (this.actualPoint+1) + ' of ' + this.points.length + '(' + this.points[this.actualPoint].latitude + ', ' + this.points[this.actualPoint].longitude + ')')
+        if(config.debug)
+            console.log('Scanning point ' + (this.actualPoint+1) + ' of ' + this.points.length + '(' + this.points[this.actualPoint].latitude + ', ' + this.points[this.actualPoint].longitude + ')')
+        
         api.SetLocation({
             type: 'coords',
             coords: {
@@ -125,7 +127,9 @@ const service = {
                     PokemonModel.add(pokemons[i]);
                 }
 
-                console.log('Found ' + pokemons.length + ' pokemons');
+                if(config.debug)
+                    console.log('Found ' + pokemons.length + ' pokemons');
+
                 setTimeout(this._radar.bind(this), this.constants.scanTimeout);
             }).catch(err => {
                 //console.err(err);
