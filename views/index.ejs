@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyDLNvwmhztoJ98s6FzO47fFopauiXD1F0k" type="text/javascript"></script>
-    <script src="/javascripts/jquery.js" type="text/javascript"></script>
-  </head>
+	<head>
+		<title><%= title %></title>
+		<link rel='stylesheet' href='/stylesheets/style.css' />
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+		<script src="//maps.googleapis.com/maps/api/js?key=AIzaSyDLNvwmhztoJ98s6FzO47fFopauiXD1F0k" type="text/javascript"></script>
+		<script src="/javascripts/jquery.js" type="text/javascript"></script>
+
+		<meta property="og:url" content="https://pokeslava.sk" />
+		<meta property="og:title" content="<%= title %>" />
+		<meta property="og:description" content="Chýba vám pokémon ? Vyčíhajte si ho. Mapa pokémonov v centre mesta Bratislava." />
+		<meta property="og:image" content="/images/pokeslava_facebook_share.png" />
+	</head>
   <body>
     <div id="fb-root"></div>
     <script>(function(d, s, id) {
@@ -24,22 +29,18 @@
       ga('create', 'UA-39732339-5', 'auto');
       ga('send', 'pageview');
     </script>
-
+    <div id="navigation">
+	    <a href="/" class="logo">
+		    <img src="images/pokeslava_logo.svg" alt="Logo Pokeslava">
+	    </a><small>
+	    by
+	    </small><a href="http://citronweb.sk" class="logo" id="citronweb-logo">
+			<img src="http://citronweb.sk/img/logo.svg" alt="Logo Citronweb">
+		</a>
+    </div>
     <div id="map" style=""></div>
-    <div id="credits">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-4">
-            <h3>Made with <3 by Po1nt</h3>
-          </div>
-          <div class="col-sm-1">
-            <a href="http://citronweb.sk">
-              <img src="http://citronweb.sk/img/logo.svg" alt="Logo Citronweb" class="img-responsive">
-            </a>
-          </div>
-          <div class="col-sm-3 text-center"><div class="fb-share-button" data-href="https://pokeslava.sk" data-layout="button_count" data-size="large" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fpokeslava.sk%2F&amp;src=sdkpreparse">Zdieľať</a></div></div>
-        </div>
-      </div>
+    <div id="footer">
+      <small>Made with <3 by Po1nt</small>
     </div>
     <script type="text/javascript">
       var map = null;
@@ -66,7 +67,7 @@
             lng: pokemon.longitude
           },
           map: map,
-          icon: '/images/' + pokemon.type + '.png'
+          icon: '/images/icons/' + pokemon.type + '.png'
         });
         pokemon.infoWindow = new google.maps.InfoWindow({
           content: '<h3 class="pokemon-name">' + pokemon.name + '</h3>'

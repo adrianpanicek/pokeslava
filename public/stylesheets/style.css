@@ -1,20 +1,39 @@
-body {
+body, html {
+  height: 100%;
+  width: 100%;
   padding: 0;
   margin: 0; }
 
 #map {
   height: 90%;
   z-index: 100; }
+  #map .pokemon-name {
+    text-transform: capitalize; }
 
-#credits {
+#navigation {
   width: 100%;
-  padding: 20px;
-  padding-bottom: 0; }
+  height: 10%;
+  padding: 5px 20px; }
+  #navigation small {
+    color: #4B494C;
+    font-weight: bold;
+    padding: 0 5px; }
+  #navigation .logo {
+    display: inline-block;
+    height: 100%;
+    vertical-align: top; }
+    #navigation .logo img {
+      height: 100%; }
+  #navigation #citronweb-logo.logo {
+    padding-bottom: 15px; }
 
-#credits h3 {
-  margin-top: 10px; }
-
-.pokemon-name {
-  text-transform: capitalize; }
+#footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  padding: 15px;
+  z-index: 900; }
 
 /*# sourceMappingURL=style.css.map */
