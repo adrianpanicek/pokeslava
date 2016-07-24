@@ -16,3 +16,7 @@ body {
 #credits h3 {
     margin-top: 10px;
 }
+
+.pokemon-name {
+    text-transform: capitalize;
+}
