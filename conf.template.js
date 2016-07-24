@@ -12,6 +12,11 @@ const config = {
         radarLimitRadius: 2500,
         heartbeatRadius: 100,
         scanTimeout: 1000
+    },
+    mongodb: {
+        host: 'localhost',
+        port: 27017,
+        database: 'pokemon'
     }
 };
 

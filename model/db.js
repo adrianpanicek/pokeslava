@@ -1,9 +1,10 @@
 var MongoClient = require('mongodb').MongoClient;
+import config from '../conf.js';
 
 const connection = {
-    host: 'localhost',
-    port: 27017,
-    database: 'pokemon',
+    host: config.mongodb.host,
+    port: config.mongodb.port,
+    database: config.mongodb.database,
 
     instance: null,
     _collections: {
