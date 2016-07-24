@@ -12,7 +12,7 @@ router.get('/pokemons', function(req, res, next) {
     PokemonModel.list().then((pokemons) => {
         var spokemons = {};
         for(var i in pokemons) {
-            pokemons[i].name = pokemonNames
+            pokemons[i].name = pokemonNames[pokemons[i].type];
         }
         res.send(pokemons);
     });
