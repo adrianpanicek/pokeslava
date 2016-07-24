@@ -70,7 +70,7 @@
         });
         pokemon.infoWindow = new google.maps.InfoWindow({
           content: '<h3 class="pokemon-name">' + pokemon.name + '</h3>'
-          + '<small class="despawn-counter" data-pokemon-id="'+index+'">' + secondsTillDespawn(Date.parse(pokemon.despawn)) + 's</small>'
+          + '<small class="despawn-counter" data-pokemon-id="'+index+'">' + timeTillDespawn(Date.parse(pokemon.despawn)) + '</small>'
         });
         pokemon.marker.addListener('click', function() {
           pokemon.infoWindow.open(map, pokemon.marker);
@@ -107,8 +107,11 @@
         });
       }
 
-      function secondsTillDespawn(despawn) {
-        return Math.floor((+despawn - +new Date()) / 1000);
+      function timeTillDespawn(despawn) {
+        var tseconds = Math.floor((+despawn - +new Date()) / 1000);
+        var seconds = tseconds % 60; // seconds left in minute
+        var minutes = Math.floor(tseconds / 60);
+        return minutes + ":" + ((seconds < 10)? '0': '') + seconds + "s";
       }
 
       function findPokemon(pokemons, id) {
@@ -129,8 +132,8 @@
             return;
 
           var despawn_date = Date.parse(pokemon.despawn);
-          var seconds = secondsTillDespawn(despawn_date);
-          $(this).text(seconds + 's');
+          var time = timeTillDespawn(despawn_date);
+          $(this).text(time);
         });
         setTimeout(reloadCounters, 1000);
       }
