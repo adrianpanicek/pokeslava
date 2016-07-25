@@ -8,6 +8,8 @@ const service = {
     initialized : false,
     constants: config.radar,
     actualPoint: 0,
+    emptyResponses: 0,
+    failedLogins: 0,
     points: [],
     pokemons: [],
 
@@ -62,34 +64,47 @@ const service = {
         }
         return points;
     },
-
-    init: function() {
-        api.init(
-            this.constants.login,
-            this.constants.password,
-            {
-                type: 'coords',
-                coords: {
-                    latitude: this.constants.center.latitude,
-                    longitude: this.constants.center.longitude,
-                    altitude: 150
+    login: function() {
+        var p = (resolve, reject) => {
+            api.init(
+                this.constants.login,
+                this.constants.password,
+                {
+                    type: 'coords',
+                    coords: {
+                        latitude: this.constants.center.latitude,
+                        longitude: this.constants.center.longitude,
+                        altitude: 150
+                    }
+                },
+                'ptc',
+                (err) => {
+                    if (err) {
+                        reject(err);
+                        return;
+                    } else {
+                        this.initialized = true;
+                        resolve();
+                        return;
+                    }
                 }
-            },
-            'ptc',
-            (err) => {
-                if(err)
-                    console.log(err)
-                else
-                    this.initialized = true;
-            }
-        );
-
-        this.points = service.generatePoints(
-            this.constants.center,
-            this.constants.heartbeatRadius,
-            this.constants.radarLimitRadius
-        );
-        this._radar();
+            );
+        }
+        return new Promise(p);
+    },
+    init: function() {
+        this.login().then(() => {
+            this.points = service.generatePoints(
+                this.constants.center,
+                this.constants.heartbeatRadius,
+                this.constants.radarLimitRadius
+            );
+            this._radar();
+        }).catch((err) => {
+            this.failedLogins++;
+            console.log(err);
+            setTimeout(this.init.bind(this), 10000);
+        });
     },
     _radar: function() {
         if(!this.points[this.actualPoint])
@@ -130,11 +145,23 @@ const service = {
                 if(config.debug)
                     console.log('Found ' + pokemons.length + ' pokemons');
 
+                this.emptyResponses = 0;
+
                 setTimeout(this._radar.bind(this), this.constants.scanTimeout);
             }).catch(err => {
-                //console.err(err);
-                console.error(err + ', replaning scan');
-                setTimeout(this._radar.bind(this), this.constants.scanTimeout);
+                if(this.emptyResponses > 2) {
+                    this.login().then(() => {
+                        this.emptyResponses = 0;
+                    }).catch((err) => {
+                        this.failedLogins++;
+                        console.log(err);
+                    });
+                    setTimeout(this._radar.bind(this), 10000);
+                } else {
+                    console.error(err + ', replaning scan');
+                    this.emptyResponses++;
+                    setTimeout(this._radar.bind(this), this.constants.scanTimeout);
+                }
             });
         });
     },
