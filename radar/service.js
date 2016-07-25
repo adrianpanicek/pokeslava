@@ -145,6 +145,7 @@ const service = {
                 if (err || !res || !res.cells) {
                     console.error(err);
                     reject(err);
+                    return;
                 }
 
                 pokemons = this._processHeartbeat(res);
