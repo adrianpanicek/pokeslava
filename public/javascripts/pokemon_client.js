@@ -2,6 +2,9 @@ var pokemon_client = {
     pokemons: {},
 
     addMarkerForPokemon: function(pokemon, index) {
+        if(+Date.parse(pokemon.despawn) > +new Date() + 1600000) { // Temporary hide weird permanent pokemons
+            return pokemon;
+        }
         var icon = {
             url: '/images/icons/' + pokemon.type + '.png', // url
             scaledSize: new google.maps.Size(38, 38), // scaled size
