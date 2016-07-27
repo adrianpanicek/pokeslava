@@ -75,8 +75,7 @@ $(document).ready(function() {
 
     google.maps.event.addListener(map, 'zoom_changed', function() {
         var zoom = map.getZoom();
-        console.log(zoom);
-        // iterate over markers and call setVisible
+        // set visibility depending on zoom level
         for(var i in pokestop_client.pokestops) {
             pokestop_client.pokestops[i].marker.setVisible(zoom >= 15);
         }
