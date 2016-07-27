@@ -2,6 +2,7 @@ var api = require('./poke.io.js');
 var geolib = require('geolib');
 
 import PokemonModel from '../model/pokemon';
+import PokeStopModel from '../model/pokestop';
 import config from '../conf.js';
 
 const service = {
@@ -12,6 +13,7 @@ const service = {
     failedLogins: 0,
     points: [],
     pokemons: [],
+    pokemon_despawn_limit: 60*30*1000,
 
     generatePoints: function(startCoords, heartBeatRadius, borderLimit) {
         var points = [];
@@ -99,9 +101,9 @@ const service = {
                 this.constants.heartbeatRadius,
                 this.constants.radarLimitRadius
             );
+            this.failedLogins = 0;
             this._radar();
         }).catch((err) => {
-            this.failedLogins++;
             console.log(err);
             setTimeout(this.init.bind(this), 10000);
         });
@@ -189,6 +191,11 @@ const service = {
             if (cell.WildPokemon && cell.WildPokemon.length > 0) {
                 for(var p in cell.WildPokemon) {
 
+                    if(cell.WildPokemon[p].TimeTillHiddenMs > this.pokemon_despawn_limit) { // Wieird permanent pokemons
+                        console.log('Permanent pokemon');
+                        continue;
+                    }
+
                     var despawn = new Date();
                     despawn.setSeconds(despawn.getSeconds() + Math.floor(Math.abs(cell.WildPokemon[p].TimeTillHiddenMs)/1000));
 
@@ -202,6 +209,14 @@ const service = {
                     };
 
                     pokemons.push(pokemon);
+                }
+            }
+            if(cell.Fort && cell.Fort.length) {
+                for(var i in cell.Fort) {
+                    if(!cell.Fort[i].Enabled || !cell.Fort[i].FortType)
+                        continue;
+
+                    PokeStopModel.add(cell.Fort[i]);
                 }
             }
         }
