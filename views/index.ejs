@@ -1,150 +1,80 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title><%= title %></title>
-		<link rel='stylesheet' href='/stylesheets/style.css' />
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-		<script src="//maps.googleapis.com/maps/api/js?key=AIzaSyDLNvwmhztoJ98s6FzO47fFopauiXD1F0k" type="text/javascript"></script>
-		<script src="/javascripts/jquery.js" type="text/javascript"></script>
+<head>
+	<title><%= title %></title>
+	<link rel='stylesheet' href='/stylesheets/style.css'/>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+	      integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<script src="//maps.googleapis.com/maps/api/js?key=AIzaSyDLNvwmhztoJ98s6FzO47fFopauiXD1F0k"
+	        type="text/javascript"></script>
+	<script src="/javascripts/jquery.js" type="text/javascript"></script>
 
-		<meta property="og:url" content="https://pokeslava.sk" />
-		<meta property="og:title" content="<%= title %>" />
-		<meta property="og:description" content="Chýba vám pokémon ? Vyčíhajte si ho. Mapa pokémonov v centre mesta Bratislava." />
-		<meta property="og:image" content="http://pokeslava.sk/images/pokeslava_facebook_share.png" />
-	</head>
-  <body>
-    <div id="fb-root"></div>
-    <script>(function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
-        js.src = "//connect.facebook.net/sk_SK/sdk.js#xfbml=1&version=v2.7&appId=839935646128447";
-        fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	<meta property="og:url" content="https://pokeslava.sk"/>
+	<meta property="og:title" content="<%= title %>"/>
+	<meta property="og:description"
+	      content="Chýba vám pokémon ? Vyčíhajte si ho. Mapa pokémonov v centre mesta Bratislava."/>
+	<meta property="og:image" content="http://pokeslava.sk/images/pokeslava_facebook_share.png"/>
+</head>
+<body>
+<div id="fb-root"></div>
+<script>(function (d, s, id) {
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) return;
+		js = d.createElement(s);
+		js.id = id;
+		js.src = "//connect.facebook.net/sk_SK/sdk.js#xfbml=1&version=v2.7&appId=839935646128447";
+		fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));
+	(function (i, s, o, g, r, a, m) {
+		i['GoogleAnalyticsObject'] = r;
+		i[r] = i[r] || function () {
+					(i[r].q = i[r].q || []).push(arguments)
+				}, i[r].l = 1 * new Date();
+		a = s.createElement(o),
+				m = s.getElementsByTagName(o)[0];
+		a.async = 1;
+		a.src = g;
+		m.parentNode.insertBefore(a, m)
+	})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
-      ga('create', 'UA-39732339-5', 'auto');
-      ga('send', 'pageview');
-    </script>
-    <div id="navigation">
-	    <a href="/" class="logo">
-		    <img src="images/pokeslava_logo.svg" alt="Logo Pokeslava">
-	    </a><small>
-	    by
-	    </small><a href="http://citronweb.sk" class="logo" id="citronweb-logo">
-			<img src="http://citronweb.sk/img/logo.svg" alt="Logo Citronweb">
-		</a>
-    </div>
-    <div id="map" style=""></div>
-    <div id="footer">
-      <small>Made with <3 by <a href="https://www.facebook.com/citronpo1nt/">Po1nt</a></small>
-    </div>
-    <script type="text/javascript">
-      var map = null;
-      function initialize_map() {
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: new google.maps.LatLng(48.145359, 17.1060393),
-          zoom: 15,
-          mapTypeId: google.maps.MapTypeId.ROADMAP,
-          zoomControl: true,
-          mapTypeControl: true,
-          scaleControl: true,
-          streetViewControl: true,
-          rotateControl: true,
-          fullscreenControl: true
-        });
-      }
-
-      var pokemons = {};
-
-      function addMarkerForPokemon(pokemon, index) {
-        pokemon.marker = new google.maps.Marker({
-          position: {
-            lat: pokemon.latitude,
-            lng: pokemon.longitude
-          },
-          map: map,
-          icon: '/images/icons/' + pokemon.type + '.png'
-        });
-        pokemon.infoWindow = new google.maps.InfoWindow({
-          content: '<h3 class="pokemon-name">' + pokemon.name + '</h3>'
-          + '<small class="despawn-counter" data-pokemon-id="'+index+'">' + timeTillDespawn(Date.parse(pokemon.despawn)) + '</small>'
-        });
-        pokemon.marker.addListener('click', function() {
-          pokemon.infoWindow.open(map, pokemon.marker);
-        });
-        return pokemon;
-      }
-
-      function fetchData(callback) {
-        $.get('/pokemons', {}, callback);
-      }
-
-      function reload() {
-        fetchData(function(data) {
-          var found = {};
-          for(var i in pokemons) {
-            for(var d in data) {
-              if(data[d]._id == pokemons[i]._id) {
-                found[pokemons[i]._id] = true;
-                break;
-              }
-            }
-            if(!found[pokemons[i]._id])
-              pokemons[i].marker.setMap(null);
-          }
-          for(var d in data) {
-            if(found[data[d]._id])
-              continue;
-
-            pokemons[data[d]._id] = data[d];
-            pokemons[data[d]._id] = addMarkerForPokemon(pokemons[data[d]._id], data[d]._id);
-          }
-
-          setTimeout(reload, 10000);
-        });
-      }
-
-      function timeTillDespawn(despawn) {
-        var tseconds = Math.floor((+despawn - +new Date()) / 1000);
-        var seconds = tseconds % 60; // seconds left in minute
-        var minutes = Math.floor(tseconds / 60);
-        return minutes + ":" + ((seconds < 10)? '0': '') + seconds + "s";
-      }
-
-      function findPokemon(pokemons, id) {
-        if(pokemons[id])
-          return pokemons[id];
-
-        return null;
-      }
-
-      function reloadCounters() {
-        $('.despawn-counter').each(function() {
-          var pokemon_id = $(this).attr('data-pokemon-id');
-          if(!pokemon_id)
-            return;
-
-          var pokemon = findPokemon(pokemons, pokemon_id);
-          if(!pokemon)
-            return;
-
-          var despawn_date = Date.parse(pokemon.despawn);
-          var time = timeTillDespawn(despawn_date);
-          $(this).text(time);
-        });
-        setTimeout(reloadCounters, 1000);
-      }
-
-      $(document).ready(function() {
-        initialize_map();
-
-        reload();
-        reloadCounters();
-      });
-    </script>
-  </body>
+	ga('create', 'UA-39732339-5', 'auto');
+	ga('send', 'pageview');
+</script>
+<div id="navigation">
+	<a href="/" class="logo">
+		<img src="images/pokeslava_logo.svg" alt="Logo Pokeslava">
+	</a>
+	<small>
+		by
+	</small>
+	<a href="http://citronweb.sk" class="logo" id="citronweb-logo">
+		<img src="http://citronweb.sk/img/logo.svg" alt="Logo Citronweb">
+	</a>
+</div>
+<div id="map" style=""></div>
+<div id="footer">
+	<small>Made with <3 by <a href="https://www.facebook.com/citronpo1nt/">Po1nt</a></small>
+</div>
+<script type="text/javascript">
+	var map = null;
+	function initialize_map() {
+		map = new google.maps.Map(document.getElementById('map'), {
+			center: new google.maps.LatLng(48.145359, 17.1060393),
+			zoom: 15,
+			mapTypeId: google.maps.MapTypeId.ROADMAP,
+			zoomControl: true,
+			mapTypeControl: true,
+			scaleControl: true,
+			streetViewControl: true,
+			rotateControl: true,
+			fullscreenControl: true
+		});
+	}
+	$(document).ready(function() {
+		initialize_map();
+	});
+</script>
+<script type="text/javascript" src="javascripts/pokemon_client.js"></script>
+<script type="text/javascript" src="javascripts/pokestop_client.js"></script>
+</body>
 </html>
