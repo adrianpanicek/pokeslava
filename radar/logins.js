@@ -24,7 +24,11 @@ module.exports = {
             if (err) {
                 return callback(err, null);
             }
-            data = JSON.parse(body);
+            try {
+                data = JSON.parse(body);
+            } catch(e) {
+                return callback(new Error('Login failed'), null);
+            }
 
             options = {
                 url: login_url,
