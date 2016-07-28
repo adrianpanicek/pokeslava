@@ -7,7 +7,13 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 
-import service from './radar/service';
+import Radar from './services/radar.js';
+import pokemonProcesor from './services/procesors/pokemon';
+import fortProcesor from './services/procesors/fort';
+
+var radar = new Radar();
+radar.addProcesor('WildPokemon', pokemonProcesor);
+radar.addProcesor('Fort', fortProcesor);
 
 var app = express();
 

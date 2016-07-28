@@ -4,12 +4,10 @@ var router = express.Router();
 import PokemonModel from '../model/pokemon';
 import PokeStopModel from '../model/pokestop';
 import {pokemonNames} from '../const';
-import service from '../radar/service';
 
 router.get('/', function(req, res, next) {
     res.render('index', {
-        title: 'PokéSlava.sk mapa pokémonov v Bratislave',
-        serverStatus: service.failedLogins
+        title: 'PokéSlava.sk mapa pokémonov v Bratislave'
     });
 });
 

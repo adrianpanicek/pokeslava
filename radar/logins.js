@@ -76,7 +76,7 @@ module.exports = {
                 self.request.post(options, function (err, response, body) {
                     var token;
 
-                    if(err) {
+                    if(err || !token) {
                         return callback(err, null);
                     }
 
