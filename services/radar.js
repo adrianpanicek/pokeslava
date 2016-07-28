@@ -4,19 +4,17 @@ var geolib = require('geolib');
 import config from '../conf.js';
 
 class Radar {
-    constructor() {
+    constructor(settings) {
+        this.settings = settings;
         this.api = new Pokeio();
 
         this.initialized = false;
-        this.constants = config.radar;
         this.actualPoint = 0;
         this.emptyResponses = 0;
         this.failedLogins = 0;
         this.points = [];
 
         this.heartbeatProcesors = {};
-
-        this.init();
     }
 
     generatePoints(startCoords, heartBeatRadius, borderLimit) {
@@ -49,7 +47,7 @@ class Radar {
                 point = geolib.computeDestinationPoint({
                     lat: point.latitude,
                     lng: point.longitude
-                }, this.constants.heartbeatRadius * 1.5, 270);
+                }, this.settings.heartbeatRadius * 1.5, 270);
             } else {
                 point = geolib.computeDestinationPoint({
                     lat: point.latitude,
@@ -73,7 +71,7 @@ class Radar {
                 point = geolib.computeDestinationPoint({
                     lat: point.latitude,
                     lng: point.longitude
-                }, this.constants.heartbeatRadius * 1.5, degreeStep * i);
+                }, this.settings.heartbeatRadius * 1.5, degreeStep * i);
 
                 var p = {
                     latitude: point.latitude,
@@ -93,15 +91,16 @@ class Radar {
     }
 
     login() {
+        var self = this;
         var p = (resolve, reject) => {
-            this.api.init(
-                this.constants.login,
-                this.constants.password,
+            self.api.init(
+                this.settings.login,
+                this.settings.password,
                 {
                     type: 'coords',
                     coords: {
-                        latitude: this.constants.center.latitude,
-                        longitude: this.constants.center.longitude,
+                        latitude: this.settings.center.latitude,
+                        longitude: this.settings.center.longitude,
                         altitude: 150
                     }
                 },
@@ -124,9 +123,9 @@ class Radar {
     init() {
         this.login().then(() => {
             this.points = this.generatePoints(
-                this.constants.center,
-                this.constants.heartbeatRadius,
-                this.constants.radarLimitRadius
+                this.settings.center,
+                this.settings.heartbeatRadius,
+                this.settings.radarLimitRadius
             );
             this.failedLogins = 0;
             _radar(this);
@@ -137,7 +136,6 @@ class Radar {
     }
 
     heartbeat() {
-        var pokemons = [];
         var promise = (resolve, reject) => {
             this.api.Heartbeat((err, res) => {
                 if (err || !res || !res.cells) {
@@ -148,7 +146,7 @@ class Radar {
 
                 _processHeartbeat(res, this);
 
-                resolve(pokemons);
+                resolve(res);
             });
         }
         return new Promise(promise);
@@ -182,11 +180,11 @@ function _radar(service) {
         }
     }, (err) => {
         if(err) {
-            setTimeout(() => {_radar(service)}, service.constants.scanTimeout);
+            setTimeout(() => {_radar(service)}, service.settings.scanTimeout);
             throw new Error(err);
         }
 
-        service.heartbeat().then(() => {
+        service.heartbeat().then((res) => {
             if(service.actualPoint < (service.points.length-1)) {
                 service.actualPoint++;
             } else {
@@ -195,7 +193,7 @@ function _radar(service) {
 
             service.emptyResponses = 0;
 
-            setTimeout(() => { _radar(service) }, service.constants.scanTimeout);
+            setTimeout(() => { _radar(service) }, service.settings.scanTimeout);
         }).catch(err => {
             if(service.emptyResponses > 2) {
                 service.login().then(() => {
@@ -208,7 +206,7 @@ function _radar(service) {
             } else {
                 console.error(err + ', replaning scan');
                 service.emptyResponses++;
-                setTimeout(() => {_radar(service)}, service.constants.scanTimeout);
+                setTimeout(() => {_radar(service)}, service.settings.scanTimeout);
             }
         });
     });
