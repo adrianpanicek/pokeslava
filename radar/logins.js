@@ -51,7 +51,11 @@ module.exports = {
                 }
 
                 if (body) {
-                    var parsedBody = JSON.parse(body);
+                    try {
+                        var parsedBody = JSON.parse(body);
+                    } catch(e) {
+                        return callback(new Error('Error parsing login', null);
+                    }
                     if (parsedBody.errors && parsedBody.errors.length !== 0) {
                         return callback(new Error('Error logging in: ' + parsedBody.errors[0]), null);
                     }
