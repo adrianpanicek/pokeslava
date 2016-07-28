@@ -6,11 +6,15 @@ var pokestop_client = {
         var text = false;
         if(pokestop.LureInfo) {
             var date = new Date(pokestop.LureInfo.LureExpiresTimestampMs*1)
-            if(+date > +new Date() + 1600000) { // sometimes lure modules drop weird dates
+            if(+date < +new Date() && +date > +new Date() + 1600000) { // sometimes lure modules drop weird dates
                 text = false;
             } else {
                 icon_image = '/images/lure.png';
-                text = 'Lure platný do: ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+                var minutes = date.getMinutes();
+                var seconds = date.getSeconds();
+                text = 'Lure platný do: ' + date.getHours() + ':' +
+                    ((minutes < 10)? "0" + minutes : minutes) + ':' +
+                    ((seconds < 10)? "0" + seconds : seconds);
             }
         }
 
