@@ -11,7 +11,7 @@ const config = {
                 longitude: 17.113959,
             },
             radarLimitRadius: 2500,
-            heartbeatRadius: 100,
+            heartbeatRadius: 70, // 0.31 Pokémon Go reduced HB radius to 70
             scanTimeout: 1000
         }
     ],
