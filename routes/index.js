@@ -3,11 +3,13 @@ var router = express.Router();
 
 import PokemonModel from '../model/pokemon';
 import PokeStopModel from '../model/pokestop';
+import config from '../conf';
 import {pokemonNames} from '../const';
 
 router.get('/', function(req, res, next) {
     res.render('index', {
-        title: 'PokéSlava.sk mapa pokémonov v Bratislave'
+        title: 'PokéSlava.sk mapa pokémonov v Bratislave',
+        maintenance: config.maintenance
     });
 });
 

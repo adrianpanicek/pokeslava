@@ -2,6 +2,8 @@
 const config = {
     port: 80,
     debug: false,
+    maintenance: false,
+    googleId: '',
     radar: [
         {
             login: 'KalinakOdstup',
