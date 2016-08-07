@@ -1,4 +1,4 @@
-import { Pokeio } from '../radar/poke.io';
+import { Pokeio } from '../pokeio/poke.io';
 var geolib = require('geolib');
 
 import config from '../conf.js';
@@ -131,6 +131,16 @@ class Radar {
             _radar(this);
         }).catch((err) => {
             console.log(err);
+            if(this.failedLogins > 5) {
+                this.api.GetAccessToken(this.settings.login, this.settings.password, () => {
+                    console.log('Regained token');
+                    this.api.GetApiEndpoint((err, api_endpoint) => {
+                        if (err) {
+                            console.error('GetApiPoint: ' + err);
+                        }
+                    });
+                });
+            }
             setTimeout(this.init.bind(this), 10000);
         });
     }
@@ -169,7 +179,7 @@ function _radar(service) {
         throw new Error('Point ' + service.actualPoint + ' not valid');
 
     if(config.debug)
-        console.log('Scanning point ' + (service.actualPoint+1) + ' of ' + service.points.length + '(' + service.points[service.actualPoint].latitude + ', ' + service.points[service.actualPoint].longitude + ')')
+        console.log(service.settings.login + ': Scanning point ' + (service.actualPoint+1) + ' of ' + service.points.length + '(' + service.points[service.actualPoint].latitude + ', ' + service.points[service.actualPoint].longitude + ')')
 
     service.api.SetLocation({
         type: 'coords',

@@ -1,4 +1,5 @@
 import PokemonModel from '../../model/pokemon';
+import conf from '../../conf';
 
 var pokemonProcesor = function(data) {
     var promise = (resolve, reject) => {
@@ -20,9 +21,30 @@ var pokemonProcesor = function(data) {
         };
 
         PokemonModel.add(pokemon);
+        if(conf.debug) {
+            pokemons.push(pokemon);
+            debugReporter();
+        }
         resolve(true);
     }
     return new Promise(promise);
+};
+
+var pokemons = [];
+var debugging = 0;
+var interval = null;
+var debugReporter = function() {
+    if(debugging == 0) {
+        debugging = +new Date();
+    }
+    if(+new Date() - debugging > 3600000) {
+        pokemons = [];
+        debugging = +new Date();
+    }
+    console.log('Processing ' + ((pokemons.length / (+new Date() - debugging)) * 60000) + ' per minute');
+
+    if(!interval)
+        interval = setInterval(debugReporter, 10000);
 };
 
 export default pokemonProcesor;
