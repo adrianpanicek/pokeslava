@@ -1,3 +1,6 @@
 [submodule "radar"]
 	path = radar
 	url = ../../d-pollard/Pokemon-GO-node-api.git
+[submodule "pokeio"]
+	path = pokeio
+	url = ../Pokemon-GO-node-api.git
