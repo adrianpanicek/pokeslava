@@ -14,7 +14,8 @@ const config = {
             },
             radarLimitRadius: 2500,
             heartbeatRadius: 70, // 0.31 Pokémon Go reduced HB radius to 70
-            scanTimeout: 1000
+            scanTimeout: 1000,
+            scanOffset: 120
         }
     ],
     mongodb: {

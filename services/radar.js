@@ -9,7 +9,7 @@ class Radar {
         this.api = new Pokeio();
 
         this.initialized = false;
-        this.actualPoint = 0;
+        this.actualPoint = (settings.scanOffset)? settings.scanOffset : 0;
         this.emptyResponses = 0;
         this.failedLogins = 0;
         this.points = [];
