@@ -93,6 +93,8 @@ class Radar {
     login() {
         var self = this;
         var p = (resolve, reject) => {
+            delete self.api;
+            self.api = new Pokeio();
             self.api.init(
                 this.settings.login,
                 this.settings.password,
