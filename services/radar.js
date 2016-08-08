@@ -141,6 +141,7 @@ class Radar {
                     });
                 });
             }
+            this.failedLogins++;
             setTimeout(this.init.bind(this), 10000);
         });
     }
@@ -206,11 +207,10 @@ function _radar(service) {
             setTimeout(() => { _radar(service) }, service.settings.scanTimeout);
         }).catch(err => {
             if(service.emptyResponses > 2) {
-                service.login().then(() => {
+                service.init().then(() => {
                     service.emptyResponses = 0;
                 }).catch((err) => {
-                    service.failedLogins++;
-                    console.log(err);
+                    console.log('Failed reinitialization ' + err);
                 });
                 setTimeout(() => {_radar(service)}, 10000);
             } else {
